@@ -7,31 +7,41 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 describe "Test Queue Implementation" do
   it "creates a Queue" do
     q = Queue.new
-    q.class.must_equal Queue
+    expect(q.class).must_equal Queue
   end
-
+  
   it "adds something to an empty Queue" do
     skip
     q = Queue.new
     q.enqueue(10)
-    q.to_s.must_equal "[10]"
+    expect(q.to_s).must_equal "[10]"
   end
-
+  
   it "adds multiple somethings to a Queue" do
     skip
     q = Queue.new
     q.enqueue(10)
     q.enqueue(20)
     q.enqueue(30)
-    q.to_s.must_equal "[10, 20, 30]"
+    expect(q.to_s).must_equal "[10, 20, 30]"
   end
-
+  
   it "starts the size of a Queue at 0" do
     skip
     q = Queue.new
     q.empty?.must_equal true
   end
-
+  
+  it "a Queue is empty after removing all the elements" do
+    skip
+    q = Queue.new
+    q.enqueue(5)
+    q.enqueue(6)
+    expect( expect(q.dequeue) ).must_equal 5
+    expect( expect(q.dequeue) ).must_equal 6
+    expect(q.empty?).must_equal true
+  end
+  
   it "removes something from the Queue" do
     skip
     q = Queue.new
@@ -40,7 +50,7 @@ describe "Test Queue Implementation" do
     removed.must_equal 5
     q.empty?.must_equal true
   end
-
+  
   it "removes the right something (LIFO)" do
     skip
     q = Queue.new
@@ -51,7 +61,7 @@ describe "Test Queue Implementation" do
     removed.must_equal 5
     q.to_s.must_equal "[3, 7]"
   end
-
+  
   it "properly adjusts the size with enqueueing and dequeueing" do
     skip
     q = Queue.new
@@ -63,7 +73,7 @@ describe "Test Queue Implementation" do
     q.dequeue
     q.empty?.must_equal true
   end
-
+  
   it "returns the front element in the Queue" do
     skip
     q = Queue.new
@@ -100,7 +110,35 @@ describe "Test Queue Implementation" do
     q.enqueue(200)
     q.enqueue(210)
     q.dequeue
-
-    expect(q.to_s).must_equal('[40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240]')
+    
+    expect(q.to_s).must_equal('[30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]')
+  end
+  
+  it "works for a large queue with a large number of adds and removes" do
+    q = Queue.new
+    
+    99.times do 
+      q.enqueue(10)
+    end
+    
+    10.times do 
+      expect(q.dequeue).must_equal 10
+    end
+    
+    5.times do 
+      q.enqueue(5)
+    end
+    
+    expected_answer = "["
+    89.times do 
+      expected_answer = expected_answer + "10, "
+    end
+    
+    4.times do 
+      expected_answer = expected_answer + "5, "
+    end
+    expected_answer = expected_answer + "5]"
+    
+    expect(q.to_s).must_equal expected_answer
   end
 end
